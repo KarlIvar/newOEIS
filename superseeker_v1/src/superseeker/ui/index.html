@@ -1,0 +1,373 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SuperSeeker V1 UI</title>
+    <style>
+      :root {
+        --bg: #f6f5f1;
+        --panel: #fffef9;
+        --ink: #1f1a17;
+        --muted: #6a6058;
+        --accent: #cf3c2d;
+        --accent-soft: #ffe6db;
+        --line: #e7dfd8;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        color: var(--ink);
+        font-family: "Space Grotesk", "Avenir Next", "Segoe UI", sans-serif;
+        background:
+          radial-gradient(circle at 10% 0%, #ffe6c7 0%, rgba(255, 230, 199, 0) 35%),
+          radial-gradient(circle at 100% 10%, #ffd7d1 0%, rgba(255, 215, 209, 0) 35%),
+          linear-gradient(180deg, #fefcf9 0%, var(--bg) 100%);
+        min-height: 100vh;
+      }
+
+      .wrap {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 28px 16px 36px;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: clamp(2rem, 3.5vw, 3rem);
+        letter-spacing: 0.02em;
+      }
+
+      .subtitle {
+        margin: 8px 0 24px;
+        color: var(--muted);
+        font-size: 1rem;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: 1.2fr 0.8fr;
+        gap: 16px;
+      }
+
+      .panel {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 16px;
+        box-shadow: 0 8px 30px rgba(37, 21, 12, 0.06);
+      }
+
+      .panel h2 {
+        margin: 0 0 10px;
+        font-size: 1.1rem;
+      }
+
+      .row {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+
+      label {
+        font-size: 0.9rem;
+        color: var(--muted);
+      }
+
+      textarea,
+      input[type="number"] {
+        width: 100%;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        background: #fff;
+        color: var(--ink);
+        font-size: 1rem;
+        padding: 10px 12px;
+      }
+
+      textarea {
+        min-height: 90px;
+        resize: vertical;
+      }
+
+      .button {
+        border: none;
+        border-radius: 999px;
+        background: var(--accent);
+        color: white;
+        padding: 10px 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: transform 120ms ease, filter 120ms ease;
+      }
+
+      .button:hover {
+        filter: brightness(1.05);
+        transform: translateY(-1px);
+      }
+
+      .button.secondary {
+        background: #1f1a17;
+      }
+
+      .examples {
+        margin-top: 10px;
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+
+      .chip {
+        border: 1px solid var(--line);
+        background: var(--accent-soft);
+        color: #5e211a;
+        border-radius: 999px;
+        padding: 6px 10px;
+        font-size: 0.85rem;
+        cursor: pointer;
+      }
+
+      .status {
+        min-height: 1.4rem;
+        margin-top: 8px;
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+
+      .results-head {
+        margin-top: 14px;
+        font-size: 0.95rem;
+        color: var(--muted);
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 8px;
+      }
+
+      th, td {
+        border-bottom: 1px solid var(--line);
+        text-align: left;
+        padding: 8px 6px;
+        vertical-align: top;
+        font-size: 0.9rem;
+      }
+
+      th {
+        color: var(--muted);
+        font-size: 0.78rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+
+      a {
+        color: var(--accent);
+        text-decoration: none;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+
+      .metric {
+        margin: 10px 0 0;
+        padding: 10px;
+        border-radius: 10px;
+        border: 1px dashed var(--line);
+        background: #fff;
+        font-family: "IBM Plex Mono", "Fira Code", monospace;
+      }
+
+      @media (max-width: 900px) {
+        .grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="wrap">
+      <h1>SuperSeeker V1</h1>
+      <p class="subtitle">Transform-aware sequence search interface for your local OEIS dataset.</p>
+
+      <div class="grid">
+        <section class="panel">
+          <h2>Search</h2>
+          <label for="query">Terms (comma-separated integers)</label>
+          <textarea id="query">0,1,1,2,3,5,8,13,21,34</textarea>
+
+          <div class="row" style="margin-top: 10px;">
+            <label for="topk">Top K</label>
+            <input id="topk" type="number" min="1" max="50" value="10" style="max-width: 120px;">
+            <button id="searchBtn" class="button">Run Search</button>
+          </div>
+
+          <div class="examples">
+            <button class="chip" data-seq="1,1,2,3,5,8,13,21">Fibonacci-like</button>
+            <button class="chip" data-seq="1,4,9,16,25,36,49">Squares</button>
+            <button class="chip" data-seq="2,3,5,7,11,13,17">Primes</button>
+            <button class="chip" data-seq="1,2,4,8,16,32,64">Powers of 2</button>
+          </div>
+
+          <div class="status" id="searchStatus"></div>
+          <div class="results-head" id="resultsHead"></div>
+          <div style="overflow-x: auto;">
+            <table id="resultsTable">
+              <thead>
+                <tr>
+                  <th>Rank</th>
+                  <th>ID</th>
+                  <th>Name</th>
+                  <th>Score</th>
+                  <th>Evidence</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="panel">
+          <h2>Evaluation</h2>
+          <label for="samples">Samples</label>
+          <input id="samples" type="number" min="1" max="2000" value="200">
+
+          <label for="prefixLen" style="margin-top: 10px; display: block;">Prefix Length</label>
+          <input id="prefixLen" type="number" min="3" max="30" value="8">
+
+          <label for="evalTopK" style="margin-top: 10px; display: block;">Top K</label>
+          <input id="evalTopK" type="number" min="1" max="50" value="10">
+
+          <div class="row" style="margin-top: 12px;">
+            <button id="evalBtn" class="button secondary">Run Evaluation</button>
+          </div>
+
+          <div class="status" id="evalStatus"></div>
+          <div class="metric" id="evalMetric">No evaluation run yet.</div>
+
+          <h2 style="margin-top: 18px;">Health</h2>
+          <div class="metric" id="healthMetric">Checking server...</div>
+        </section>
+      </div>
+    </main>
+
+    <script>
+      const queryEl = document.getElementById("query");
+      const topkEl = document.getElementById("topk");
+      const searchBtn = document.getElementById("searchBtn");
+      const searchStatus = document.getElementById("searchStatus");
+      const resultsHead = document.getElementById("resultsHead");
+      const resultsTableBody = document.querySelector("#resultsTable tbody");
+
+      const samplesEl = document.getElementById("samples");
+      const prefixLenEl = document.getElementById("prefixLen");
+      const evalTopKEl = document.getElementById("evalTopK");
+      const evalBtn = document.getElementById("evalBtn");
+      const evalStatus = document.getElementById("evalStatus");
+      const evalMetric = document.getElementById("evalMetric");
+      const healthMetric = document.getElementById("healthMetric");
+
+      function fmt(v, digits = 4) {
+        return Number(v).toFixed(digits);
+      }
+
+      function clearResults() {
+        resultsTableBody.innerHTML = "";
+      }
+
+      function renderResults(results) {
+        clearResults();
+        for (const item of results) {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${item.rank}</td>
+            <td><a href="${item.oeis_url}" target="_blank" rel="noopener">${item.a_number}</a></td>
+            <td>${item.name || ""}</td>
+            <td>${fmt(item.score)} / ${fmt(item.confidence)}</td>
+            <td>${item.evidence}</td>
+          `;
+          resultsTableBody.appendChild(tr);
+        }
+      }
+
+      async function runSearch() {
+        searchStatus.textContent = "Running search...";
+        resultsHead.textContent = "";
+        try {
+          const response = await fetch("/api/search", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              query: queryEl.value,
+              top_k: Number(topkEl.value || 10),
+            }),
+          });
+          const data = await response.json();
+          if (!response.ok) {
+            throw new Error(data.error || "Search failed.");
+          }
+          renderResults(data.results);
+          searchStatus.textContent = "";
+          resultsHead.textContent = `Parsed ${data.query_terms.length} terms. Returned ${data.result_count} results.`;
+        } catch (err) {
+          clearResults();
+          resultsHead.textContent = "";
+          searchStatus.textContent = String(err.message || err);
+        }
+      }
+
+      async function runEvaluation() {
+        evalStatus.textContent = "Running evaluation...";
+        evalMetric.textContent = "Working...";
+        try {
+          const response = await fetch("/api/evaluate", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              samples: Number(samplesEl.value || 200),
+              prefix_len: Number(prefixLenEl.value || 8),
+              top_k: Number(evalTopKEl.value || 10),
+            }),
+          });
+          const data = await response.json();
+          if (!response.ok) {
+            throw new Error(data.error || "Evaluation failed.");
+          }
+          evalStatus.textContent = "";
+          evalMetric.textContent = `samples=${data.sample_count} | top1=${fmt(data.top1, 3)} | top10=${fmt(data.top10, 3)} | mrr=${fmt(data.mrr, 3)}`;
+        } catch (err) {
+          evalMetric.textContent = "Evaluation failed.";
+          evalStatus.textContent = String(err.message || err);
+        }
+      }
+
+      async function loadHealth() {
+        try {
+          const response = await fetch("/api/health");
+          const data = await response.json();
+          healthMetric.textContent = `status=${data.status} | dataset_size=${data.dataset_size}`;
+        } catch (err) {
+          healthMetric.textContent = `health check failed: ${String(err.message || err)}`;
+        }
+      }
+
+      for (const chip of document.querySelectorAll(".chip")) {
+        chip.addEventListener("click", () => {
+          queryEl.value = chip.dataset.seq;
+          runSearch();
+        });
+      }
+
+      searchBtn.addEventListener("click", runSearch);
+      evalBtn.addEventListener("click", runEvaluation);
+      loadHealth();
+      runSearch();
+    </script>
+  </body>
+  </html>

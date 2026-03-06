@@ -1,0 +1,11 @@
+[project]
+name = "superseeker-v1"
+version = "0.1.0"
+description = "Starter scaffold for a transform-aware sequence search engine."
+requires-python = ">=3.9"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
