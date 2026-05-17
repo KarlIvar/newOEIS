@@ -4,6 +4,16 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>SuperSeeker V1 UI</title>
+    <script>
+      (function () {
+        var hue = Math.floor(Math.random() * 360);
+        var root = document.documentElement;
+        root.style.setProperty('--accent-hue', String(hue));
+        root.style.setProperty('--accent', 'hsl(' + hue + ', 65%, 45%)');
+        root.style.setProperty('--accent-soft', 'hsl(' + hue + ', 85%, 93%)');
+        root.style.setProperty('--accent-ink', 'hsl(' + hue + ', 55%, 22%)');
+      })();
+    </script>
     <style>
       :root {
         --bg: #f6f5f1;
@@ -12,6 +22,7 @@
         --muted: #6a6058;
         --accent: #cf3c2d;
         --accent-soft: #ffe6db;
+        --accent-ink: #5e211a;
         --line: #e7dfd8;
       }
 
@@ -125,7 +136,7 @@
       .chip {
         border: 1px solid var(--line);
         background: var(--accent-soft);
-        color: #5e211a;
+        color: var(--accent-ink);
         border-radius: 999px;
         padding: 6px 10px;
         font-size: 0.85rem;
