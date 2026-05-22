@@ -4,6 +4,15 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>SuperSeeker V1 UI</title>
+    <script>
+      (function () {
+        var hue = Math.floor(Math.random() * 360);
+        var root = document.documentElement.style;
+        root.setProperty("--accent", "hsl(" + hue + ", 65%, 45%)");
+        root.setProperty("--accent-soft", "hsl(" + hue + ", 70%, 92%)");
+        root.setProperty("--accent-ink", "hsl(" + hue + ", 55%, 22%)");
+      })();
+    </script>
     <style>
       :root {
         --bg: #f6f5f1;
@@ -125,7 +134,7 @@
       .chip {
         border: 1px solid var(--line);
         background: var(--accent-soft);
-        color: #5e211a;
+        color: var(--accent-ink);
         border-radius: 999px;
         padding: 6px 10px;
         font-size: 0.85rem;
