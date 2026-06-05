@@ -1,0 +1,9 @@
+{
+  "name": "newOEIS dev (Godot 4.6.3)",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "remoteUser": "vscode",
+  "forwardPorts": [8765, 8766],
+  "postCreateCommand": "godot --headless --version"
+}
