@@ -190,6 +190,14 @@
         }
       }
     </style>
+    <script>
+      (function () {
+        const hue = Math.floor(Math.random() * 360);
+        const root = document.documentElement.style;
+        root.setProperty("--accent", `hsl(${hue}, 65%, 45%)`);
+        root.setProperty("--accent-soft", `hsl(${hue}, 80%, 92%)`);
+      })();
+    </script>
   </head>
   <body>
     <main class="wrap">
