@@ -206,6 +206,7 @@
             <label for="topk">Top K</label>
             <input id="topk" type="number" min="1" max="50" value="10" style="max-width: 120px;">
             <button id="searchBtn" class="button">Run Search</button>
+            <button id="randomBtn" class="button secondary">Random Sequence</button>
           </div>
 
           <div class="examples">
@@ -261,6 +262,7 @@
       const queryEl = document.getElementById("query");
       const topkEl = document.getElementById("topk");
       const searchBtn = document.getElementById("searchBtn");
+      const randomBtn = document.getElementById("randomBtn");
       const searchStatus = document.getElementById("searchStatus");
       const resultsHead = document.getElementById("resultsHead");
       const resultsTableBody = document.querySelector("#resultsTable tbody");
@@ -322,6 +324,23 @@
         }
       }
 
+      async function loadRandomSequence() {
+        searchStatus.textContent = "Picking a random sequence...";
+        try {
+          const response = await fetch("/api/random");
+          const data = await response.json();
+          if (!response.ok) {
+            throw new Error(data.error || "Random pick failed.");
+          }
+          queryEl.value = data.terms.join(",");
+          await runSearch();
+          const link = `<a href="https://oeis.org/${data.a_number}" target="_blank" rel="noopener">${data.a_number}</a>`;
+          resultsHead.innerHTML = `Picked ${link} — ${data.name || "(no name)"}. ${resultsHead.textContent}`;
+        } catch (err) {
+          searchStatus.textContent = String(err.message || err);
+        }
+      }
+
       async function runEvaluation() {
         evalStatus.textContent = "Running evaluation...";
         evalMetric.textContent = "Working...";
@@ -365,6 +384,7 @@
       }
 
       searchBtn.addEventListener("click", runSearch);
+      randomBtn.addEventListener("click", loadRandomSequence);
       evalBtn.addEventListener("click", runEvaluation);
       loadHealth();
       runSearch();

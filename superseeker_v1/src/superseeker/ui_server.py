@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import random
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from typing import Any
@@ -81,6 +82,10 @@ def build_handler(state: AppState, ui_root: Path) -> type[BaseHTTPRequestHandler
                 )
                 return
 
+            if parsed.path == "/api/random":
+                self._handle_random()
+                return
+
             self._send_json(404, {"error": "Not found"})
 
         def do_POST(self) -> None:  # noqa: N802
@@ -143,6 +148,22 @@ def build_handler(state: AppState, ui_root: Path) -> type[BaseHTTPRequestHandler
                     "query_terms": list(terms),
                     "result_count": len(results),
                     "results": results,
+                },
+            )
+
+        def _handle_random(self) -> None:
+            records = self.app_state.repo.all_records()
+            if not records:
+                self._send_json(404, {"error": "Dataset is empty."})
+                return
+            record = random.choice(records)
+            self._send_json(
+                200,
+                {
+                    "a_number": record.a_number,
+                    "name": record.name,
+                    "terms": list(record.terms),
+                    "oeis_url": f"https://oeis.org/{record.a_number}",
                 },
             )
 
