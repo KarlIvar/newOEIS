@@ -125,7 +125,7 @@
       .chip {
         border: 1px solid var(--line);
         background: var(--accent-soft);
-        color: #5e211a;
+        color: var(--accent-deep);
         border-radius: 999px;
         padding: 6px 10px;
         font-size: 0.85rem;
@@ -190,6 +190,18 @@
         }
       }
     </style>
+    <script>
+      // Randomize the accent palette on each page load. Set on
+      // document.documentElement before <body> parses so the first paint
+      // already uses the random hue (no flash of the default red).
+      (function () {
+        var h = Math.floor(Math.random() * 360);
+        var root = document.documentElement.style;
+        root.setProperty("--accent", "hsl(" + h + ", 65%, 49%)");
+        root.setProperty("--accent-soft", "hsl(" + h + ", 100%, 93%)");
+        root.setProperty("--accent-deep", "hsl(" + h + ", 50%, 24%)");
+      })();
+    </script>
   </head>
   <body>
     <main class="wrap">
